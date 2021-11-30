@@ -5,7 +5,8 @@
     <employee-form @add:employee="addEmployee" />
     <employees-table :employees="employees" />
     <div class="style">
-      <button v-on:click="square()">Initiate Business</button>
+      <button v-on:click="business()">Initiate Business</button>
+      <button v-on:click="animate()">Initiate SQUARE</button>
     </div>
     <svg
       version="1.1"
@@ -63,6 +64,7 @@ button {
 import EmployeesTable from "./components/EmployeesTable.vue";
 import EmployeeForm from "./components/EmployeeForm.vue";
 import Two from "two.js";
+import THREE from "three.js";
 
 export default {
   name: "app",
@@ -99,7 +101,7 @@ export default {
 
       this.employees = [...this.employees, newEmployee];
     },
-    square: function () {
+    business: function () {
       var hands, arms;
       var two = new Two({
         fullscreen: true,
@@ -161,6 +163,32 @@ export default {
         theta = Math.atan2(b.y - a.y, b.x - a.x);
         hands.rotation = theta;
       });
+    },
+    animate: function () {
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+      const renderer = new THREE.WebGLRenderer();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+      const geometry = new THREE.BoxGeometry();
+      const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+      const cube = new THREE.Mesh(geometry, material);
+      scene.add(cube);
+
+      camera.position.z = 5;
+
+      const animate = function () {
+        requestAnimationFrame(animate);
+
+        cube.rotation.x += 0.01;
+        cube.rotation.y += 0.01;
+
+        renderer.render(scene, camera);
+      };
+
+      animate();
     },
   },
 };
